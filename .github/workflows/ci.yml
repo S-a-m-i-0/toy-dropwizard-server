@@ -2,10 +2,12 @@ name: "dropwizard-ci-pipeline"
 
 on:
   push:
+    branches:
+      - main
 
 jobs:
   build-and-test:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
 
@@ -15,11 +17,9 @@ jobs:
           java-version: 11
 
       - name: Build
-        working-directory: .
         run: ./gradlew build -x test
 
       - name: Test
-        working-directory: .
         run: ./gradlew test
 
   system-test:
@@ -28,9 +28,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Run docker Compose
-        working-directory: .
-        run: docker-compose up -d --build
+      - name: Run docker compose
+        run: docker compose up -d --build
 
       - name: set up python
         uses: actions/setup-python@v1
@@ -41,9 +40,7 @@ jobs:
         run: pip install pytest requests
 
       - name: Run system tests
-        working-directory: .
         run: pytest
 
       - name: Bring server down
-        working-directory: .
-        run: docker-compose down
+        run: docker compose down
