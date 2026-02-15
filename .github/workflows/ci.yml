@@ -2,8 +2,6 @@ name: "dropwizard-ci-pipeline"
 
 on:
   push:
-    branches:
-      - main
 
 jobs:
   build-and-test:
